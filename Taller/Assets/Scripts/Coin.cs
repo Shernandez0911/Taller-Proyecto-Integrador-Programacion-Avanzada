@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    [SerializeField] private float cantPuntos;
+    [SerializeField] private Score score;
+
     private Animator animator;
     void Start()
     {
@@ -13,6 +16,7 @@ public class Coin : MonoBehaviour
     public static bool IsObtained;
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        score.UpdateScore(cantPuntos);
         gameObject.SetActive(false);
     }
 }
