@@ -7,7 +7,9 @@ public class PlayerMove : MonoBehaviour
     private Animator animator;
     private Rigidbody2D rb;
     public float Velocidad = 5f;
-    public float FuerzaSalto = 100f;
+    public float FuerzaSalto = 100000000000f;
+    public float gravedadExtra = 1.2f;
+    public bool estaSaltando;
 
     // Start is called before the first frame update
     void Start()
@@ -42,14 +44,30 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKey("space") && CheckGround.IsGround)
         {
             rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
+            estaSaltando = true;
         }
         if (Input.GetKey("up") && CheckGround.IsGround)
         {
             rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
+            estaSaltando = true;
         }
         if (Input.GetKey("z") && CheckGround.IsGround)
         {
             rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
+            estaSaltando = true;
         }
+        if ((Input.GetKeyUp("space") || Input.GetKeyUp("z") || Input.GetKeyUp("up")) && estaSaltando)
+        {
+            if (rb.velocity.y > 0)
+            {
+                rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            }
+            estaSaltando = false;
+        }
+        if (rb.velocity.y < 0)
+        {
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra - 1) * Time.deltaTime;
+        }
+
     }
 }
