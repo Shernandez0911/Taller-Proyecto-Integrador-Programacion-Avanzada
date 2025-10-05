@@ -15,9 +15,12 @@ public class PlayerHealth : MonoBehaviour
 
 
     private bool isDead = false;
+    public AudioClip sonidoDaño;
+    private AudioSource audioSource;
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         if (animator == null)
             Debug.LogError("❌ Animator no encontrado en PlayerHealth");
         else
@@ -34,6 +37,13 @@ public class PlayerHealth : MonoBehaviour
 
 
         Debug.Log($"🏁 Vida inicial configurada: {currentHealth}/{maxHealth}");
+    }
+    public void ReproducirDaño()
+    {
+        if (sonidoDaño != null)
+        {
+            audioSource.PlayOneShot(sonidoDaño);
+        }
     }
     void Awake()
     {
@@ -83,6 +93,7 @@ public class PlayerHealth : MonoBehaviour
         {
             Debug.Log("🤕 Ejecutando animación Got_Hit");
             animator.SetTrigger("Got_Hit");
+            ReproducirDaño();
             Debug.Log($"Trigger Got_Hit activado en animator: {animator.isInitialized}");
             StartCoroutine(InvulnerabilityFrames());
         }
@@ -116,6 +127,8 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        ReproducirDaño();
+        ReproducirDaño();
 
         Debug.Log("💀 El jugador ha muerto");
 

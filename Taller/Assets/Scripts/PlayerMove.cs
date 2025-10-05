@@ -11,14 +11,24 @@ public class PlayerMove : MonoBehaviour
     public float gravedadExtra = 1.2f;
     public bool estaSaltando;
 
+    public AudioClip sonidoSalto;
+    private AudioSource audioSource;
+
     [HideInInspector] public bool puedeMoverse = true;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
-
+    public void ReproducirSalto()
+    {
+        if (sonidoSalto != null)
+        {
+            audioSource.PlayOneShot(sonidoSalto);
+        }
+    }
     void Update()
     {
         // 🔒 Si no puede moverse, forzar que quede inmóvil y salir
@@ -50,6 +60,7 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
             estaSaltando = true;
+            ReproducirSalto();
         }
 
         // --- Salto corto ---
