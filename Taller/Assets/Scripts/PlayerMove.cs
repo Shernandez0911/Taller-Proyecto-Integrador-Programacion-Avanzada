@@ -72,6 +72,16 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra - 1) * Time.deltaTime;
         }
+        if (Input.GetKeyDown("down") && !CheckGround.IsGround)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 3f); // impulso inicial
+        }
+
+        if (Input.GetKey("down") && !CheckGround.IsGround)
+        {
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra * 2f) * Time.deltaTime;
+        }
+
         if (BottomlessPit.IsBottomlessPit == true)
         {
             gameObject.SetActive(false);
