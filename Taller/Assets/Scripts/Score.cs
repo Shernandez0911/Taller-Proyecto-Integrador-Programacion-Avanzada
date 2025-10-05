@@ -25,4 +25,8 @@ public class Score : MonoBehaviour
         
     }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }

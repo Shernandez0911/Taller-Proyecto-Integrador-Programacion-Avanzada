@@ -11,6 +11,11 @@ public class PlayerMove : MonoBehaviour
     public float gravedadExtra = 1.2f;
     public bool estaSaltando;
 
+<<<<<<< Updated upstream
+=======
+    [HideInInspector] public bool puedeMoverse = true;
+   
+>>>>>>> Stashed changes
 
 
 
@@ -88,4 +93,11 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+<<<<<<< Updated upstream
     }
+=======
+   
+
+
+}
+>>>>>>> Stashed changes
