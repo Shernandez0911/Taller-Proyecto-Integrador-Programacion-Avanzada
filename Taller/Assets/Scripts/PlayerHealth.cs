@@ -91,9 +91,26 @@ public class PlayerHealth : MonoBehaviour
     private IEnumerator InvulnerabilityFrames()
     {
         isInvulnerable = true;
-        yield return new WaitForSeconds(invulnerabilityTime);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        if (sr != null)
+        {
+            float elapsed = 0f;
+            float blinkSpeed = 0.1f; // velocidad del parpadeo
+
+            while (elapsed < invulnerabilityTime)
+            {
+                sr.enabled = !sr.enabled; // alterna visibilidad
+                yield return new WaitForSeconds(blinkSpeed);
+                elapsed += blinkSpeed;
+            }
+
+            sr.enabled = true; // asegúrate de dejarlo visible al final
+        }
+
         isInvulnerable = false;
     }
+
 
     private void Die()
     {
