@@ -11,56 +11,49 @@ public class PlayerMove : MonoBehaviour
     public float gravedadExtra = 1.2f;
     public bool estaSaltando;
 
+    [HideInInspector] public bool puedeMoverse = true;
 
-
-
-
-    // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
-    }
-    private void FixedUpdate() {
+        // 🔒 Si no puede moverse, forzar que quede inmóvil y salir
+        if (!puedeMoverse)
+        {
+            animator.SetBool("isWalking", false);
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            return;
+        }
+        // --- Movimiento horizontal ---
         if (Input.GetKey("right"))
         {
             animator.SetBool("isWalking", true);
-            rb.velocity = new Vector2(Velocidad,rb.velocity.y);
             transform.localScale = new Vector2(1, 1);
         }
         else if (Input.GetKey("left"))
         {
             animator.SetBool("isWalking", true);
-            rb.velocity = new Vector2(-Velocidad, rb.velocity.y);
             transform.localScale = new Vector2(-1, 1);
         }
-        else {
+        else
+        {
             animator.SetBool("isWalking", false);
-            transform.localScale = new Vector2(1, 1);
-            rb.velocity = new Vector2(0, rb.velocity.y);
         }
-        if (Input.GetKey("space") && CheckGround.IsGround)
+
+        // --- Saltos (solo si está en suelo) ---
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Z)) && CheckGround.IsGround)
         {
             rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
             estaSaltando = true;
         }
-        if (Input.GetKey("up") && CheckGround.IsGround)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
-            estaSaltando = true;
-        }
-        if (Input.GetKey("z") && CheckGround.IsGround)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, FuerzaSalto);
-            estaSaltando = true;
-        }
-        if ((Input.GetKeyUp("space") || Input.GetKeyUp("z") || Input.GetKeyUp("up")) && estaSaltando)
+
+        // --- Salto corto ---
+        if ((Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Z) || Input.GetKeyUp(KeyCode.UpArrow)) && estaSaltando)
         {
             if (rb.velocity.y > 0)
             {
@@ -68,24 +61,50 @@ public class PlayerMove : MonoBehaviour
             }
             estaSaltando = false;
         }
+
+        // --- Caída rápida manual (opcional) ---
+        if (Input.GetKeyDown(KeyCode.DownArrow) && !CheckGround.IsGround)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 3f);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        // 🔒 Evitar que se mueva si está muerto o congelado
+        if (!puedeMoverse)
+        {
+            animator.SetBool("isWalking", false);
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            return;
+        }
+
+
+        // --- Movimiento físico (velocidad constante) ---
+        if (Input.GetKey("right"))
+        {
+            rb.velocity = new Vector2(Velocidad, rb.velocity.y);
+        }
+        else if (Input.GetKey("left"))
+        {
+            rb.velocity = new Vector2(-Velocidad, rb.velocity.y);
+        }
+        else
+        {
+            rb.velocity = new Vector2(0, rb.velocity.y);
+        }
+
+        // --- Gravedad extra ---
         if (rb.velocity.y < 0)
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra - 1) * Time.deltaTime;
         }
-        if (Input.GetKeyDown("down") && !CheckGround.IsGround)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y - 3f); // impulso inicial
-        }
 
-        if (Input.GetKey("down") && !CheckGround.IsGround)
-        {
-            rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra * 2f) * Time.deltaTime;
-        }
-
-        if (BottomlessPit.IsBottomlessPit == true)
+        // --- Caída infinita ---
+        if (BottomlessPit.IsBottomlessPit)
         {
             gameObject.SetActive(false);
         }
     }
-
-    }
+}
