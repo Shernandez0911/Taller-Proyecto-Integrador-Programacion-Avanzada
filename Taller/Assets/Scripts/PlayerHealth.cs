@@ -55,11 +55,17 @@ public class PlayerHealth : MonoBehaviour
         currentHealth = maxHealth;
         Debug.Log($"💙 Vida inicial configurada en Awake(): {currentHealth}/{maxHealth}");
     }
-    void Update() {
+    void Update()
+    {
         if (currentHealth < 0 || currentHealth > maxHealth)
         {
             Debug.LogWarning($"⚠️ Valor extraño en currentHealth: {currentHealth}");
         }
+        // --- Caída infinita ---
+        if (BottomlessPit.IsBottomlessPit)
+        {
+            Die();
+        }   
     }
 
 
@@ -97,6 +103,7 @@ public class PlayerHealth : MonoBehaviour
             Debug.Log($"Trigger Got_Hit activado en animator: {animator.isInitialized}");
             StartCoroutine(InvulnerabilityFrames());
         }
+
     }
 
     private IEnumerator InvulnerabilityFrames()
@@ -121,6 +128,7 @@ public class PlayerHealth : MonoBehaviour
 
         isInvulnerable = false;
     }
+    
 
 
     private void Die()
@@ -152,6 +160,7 @@ public class PlayerHealth : MonoBehaviour
         {
             animator.SetTrigger("Die");
         }
+
     }
 
 }

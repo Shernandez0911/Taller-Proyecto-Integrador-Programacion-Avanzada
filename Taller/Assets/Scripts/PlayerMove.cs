@@ -111,11 +111,5 @@ public class PlayerMove : MonoBehaviour
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (gravedadExtra - 1) * Time.deltaTime;
         }
-
-        // --- Caída infinita ---
-        if (BottomlessPit.IsBottomlessPit)
-        {
-            gameObject.SetActive(false);
-        }
     }
 }
