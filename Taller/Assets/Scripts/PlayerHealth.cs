@@ -12,7 +12,7 @@ public class PlayerHealth : MonoBehaviour
 
     private bool isInvulnerable = false;
     public float invulnerabilityTime = 0.5f;
-
+    public GameManagerScript gameManager;
 
     private bool isDead = false;
     public AudioClip sonidoDaño;
@@ -127,6 +127,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
+        gameManager.GameOver();
         ReproducirDaño();
         ReproducirDaño();
 
